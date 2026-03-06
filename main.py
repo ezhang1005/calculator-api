@@ -9,8 +9,8 @@ def read_root():
     return {"status": "healthy"}
 
 
-@app.get("/add/{a}/{b}", status_code=200)
-def add(a: float, b: float):
+@app.get("/substract/{a}/{b}", status_code=200)
+def substract(a: float, b: float):
     """
     Add two numbers together.
     
@@ -21,4 +21,4 @@ def add(a: float, b: float):
     Returns:
     - JSON object with the result
     """
-    return {"result": a + b}
+    return {"result": a - b}
