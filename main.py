@@ -40,14 +40,14 @@ def add(a: float, b: float):
 @app.get("/subtract/{a}/{b}", status_code=status.HTTP_200_OK)
 def subtract(a: float, b: float):
     """
-    Subtract two numbers from each other.
+    Subtracts the second number from the first number.
     
     Parameters:
     - a: First number
     - b: Second number
     
     Returns:
-    - JSON object with the result
+    - JSON object with the result of a - b
     """
     return {"result": a - b}
 
@@ -69,14 +69,17 @@ def multiply(a: float, b: float):
 @app.get("/divide/{a}/{b}", status_code=status.HTTP_200_OK)
 def divide(a: float, b: float):
     """
-    Divide two numbers.
+    Divides the first number by the second number.
     
     Parameters:
-    - a: First number
-    - b: Second number
+    - a: Numerator
+    - b: Denominator
     
     Returns:
-    - JSON object with the result
+    - JSON object with the result of a / b
+
+    Raises:
+    - HTTPException (400): If the denominator 'b' is zero.
     """
     if b == 0:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Division by zero is not allowed.")
@@ -108,7 +111,11 @@ def quad(a: float, b: float, c: float):
     - c: Constant term
 
     Returns:
-    - JSON object with the real roots (root1, root2) or an error.
+    - JSON object with the real roots, 'root1' and 'root2'.
+
+    Raises:
+    - HTTPException (400): If 'a' is zero.
+    - HTTPException (400): If the discriminant is negative (no real roots).
     """
     if a == 0:
         raise HTTPException(
@@ -132,11 +139,15 @@ def quad(a: float, b: float, c: float):
 def compound(p: float, r: float, n: int, t: float):
     """
     Calculates compound interest. A = P(1 + r/n)^(nt)
-
+    
+    Parameters:
     - p: Principal amount
     - r: Annual interest rate (as a decimal, e.g., 0.05 for 5%)
     - n: Number of times interest is compounded per year
     - t: Number of years
+
+    Returns:
+    - JSON object with the final amount after interest.
     """
     amount = p * (1 + r / n)**(n * t)
     return {"result": amount}
