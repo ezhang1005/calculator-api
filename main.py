@@ -9,8 +9,8 @@ def read_root():
     return {"status": "healthy"}
 
 
-@app.get("/substract/{a}/{b}", status_code=200)
-def substract(a: float, b: float):
+@app.get("/subtract/{a}/{b}", status_code=200)
+def subtract(a: float, b: float):
     """
     Add two numbers together.
     
