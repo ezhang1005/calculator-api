@@ -1,9 +1,23 @@
-from fastapi import FastAPI, status, HTTPException
+import math
+from fastapi import FastAPI, HTTPException, Request, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
 
-@app.get("/", status_code=200)
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """
+    Handles validation errors for path parameters, returning a 422
+    status code with a custom, human-readable error message.
+    """
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"detail": "All arguments must be valid numbers."},
+    )
+
+@app.get("/", status_code=status.HTTP_200_OK)
 def read_root():
     """Health check endpoint"""
     return {"status": "healthy"}
@@ -67,3 +81,18 @@ def divide(a: float, b: float):
     if b == 0:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Division by zero is not allowed.")
     return {"result": a / b}
+
+@app.get("/hypotenuse/{a}/{b}", status_code=status.HTTP_200_OK)
+def hypotenuse(a: float, b: float):
+    """
+    Calculates the hypotenuse of a right triangle given the other two sides.
+
+    Parameters:
+    - a: Length of the first side
+    - b: Length of the second side
+
+    Returns:
+    - JSON object with the length of the hypotenuse
+    """
+    hypot = math.sqrt(a**2 + b**2)
+    return {"result": hypot}
